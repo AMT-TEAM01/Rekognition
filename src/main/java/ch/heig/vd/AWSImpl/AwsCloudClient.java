@@ -1,15 +1,20 @@
 package ch.heig.vd.AWSImpl;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-
 public class AwsCloudClient {
 
     private static AwsCloudClient instance;
+    private AwsDataObjectHelperImpl objImpl;
+    private AwsLabelDetectorHelperImpl labelImpl;
 
-    public String profile;
+    public String profile = "default";
 
     private AwsCloudClient(){
-        profile = "default";
+        objImpl = new AwsDataObjectHelperImpl();
+        labelImpl = new AwsLabelDetectorHelperImpl();
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     public static AwsCloudClient getInstance() {
