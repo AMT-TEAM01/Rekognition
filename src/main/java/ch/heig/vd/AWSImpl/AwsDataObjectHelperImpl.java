@@ -4,6 +4,8 @@ import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 public class AwsDataObjectHelperImpl {
@@ -40,7 +42,13 @@ public class AwsDataObjectHelperImpl {
                 .build();
     }
 
-    public boolean exists(String bucketUrl) {
-        return s3.do
+    public boolean bucketExists(String bucketUrl) {
+        HeadBucketRequest request = HeadBucketRequest.builder().bucket(bucketUrl).build();
+        return s3.headBucket(request).sdkHttpResponse().isSuccessful();
+    }
+
+    public boolean objectExists(String bucketUrl, String objectName) {
+        HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketUrl).key(objectName).build();
+        return s3.headObject(request).sdkHttpResponse().isSuccessful();
     }
 }
