@@ -1,11 +1,15 @@
 package ch.heig.vd.AWSImpl;
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+
 public class AwsCloudClient {
 
     private static AwsCloudClient instance;
 
-    private AwsCloudClient(){
+    public AwsBasicCredentials awsCreds;
 
+    private AwsCloudClient(){
+        awsCreds = AwsBasicCredentials.create(Credentials.id, Credentials.key);
     }
 
     public static AwsCloudClient getInstance() {
