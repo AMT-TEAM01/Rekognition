@@ -6,10 +6,10 @@ public class AwsCloudClient {
 
     private static AwsCloudClient instance;
 
-    public AwsBasicCredentials awsCreds;
+    public String profile;
 
     private AwsCloudClient(){
-        awsCreds = AwsBasicCredentials.create(Credentials.id, Credentials.key);
+        profile = "default";
     }
 
     public static AwsCloudClient getInstance() {

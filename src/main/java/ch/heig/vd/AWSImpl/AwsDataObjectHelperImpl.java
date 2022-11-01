@@ -1,5 +1,7 @@
 package ch.heig.vd.AWSImpl;
 
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProviderChain;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -15,8 +17,7 @@ public class AwsDataObjectHelperImpl {
     public AwsDataObjectHelperImpl() {
         client = AwsCloudClient.getInstance();
         s3 = S3Client.builder()
-                .credentialsProvider(StaticCredentialsProvider.create(client.awsCreds))
-                .region(Region.of(Credentials.region))
+                .credentialsProvider(ProfileCredentialsProvider.create(client.profile))
                 .build();
 
         List<Bucket> after = s3.listBuckets().buckets();
