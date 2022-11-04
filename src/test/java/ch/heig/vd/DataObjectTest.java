@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,6 +57,19 @@ public class DataObjectTest {
 
         //then
         assertFalse(actualResult);
+    }
+
+    @Test
+    public void testGenerateURL_Success() {
+        //given
+        assertFalse(objImpl.objectExists(testImage));
+        objImpl.uploadObject(testImage, imageTestPath);
+        URL url;
+
+        //when
+        url = objImpl.generateURL(testImage, 1);
+
+        assertNotNull(url);
     }
 
     @Test
