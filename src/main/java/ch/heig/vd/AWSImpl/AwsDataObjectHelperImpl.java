@@ -1,30 +1,29 @@
 package ch.heig.vd.AWSImpl;
 
+import ch.heig.vd.IDataObjectHelper;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
-public class AwsDataObjectHelperImpl {
+import java.io.*;
+import java.nio.file.Files;
 
+public class AwsDataObjectHelperImpl implements IDataObjectHelper {
     private S3Client s3;
-
     private String bucketPath;
-
     public AwsDataObjectHelperImpl(String bucketPath) {
         this.bucketPath = bucketPath;
     }
 
-    public void uploadObject(String objectName, String data) {
+    public void uploadObject(String objectName, String from) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketPath)
                 .key(objectName)
                 .build();
 
-        s3.putObject(objectRequest, RequestBody.fromString(data));
+        s3.putObject(objectRequest, RequestBody.fromFile(new File(from)));
     }
 
     public void deleteObject(String objectName) {
@@ -34,6 +33,19 @@ public class AwsDataObjectHelperImpl {
                 .build();
 
         s3.deleteObject(deleteObjectRequest);
+    }
+
+    public void downloadObject(String objectName, String path) throws IOException {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketPath)
+                .key(objectName)
+                .build();
+
+        ResponseBytes<GetObjectResponse> obj = s3.getObjectAsBytes(getObjectRequest);
+        byte[] data = obj.asByteArray();
+        File f = new File(path + objectName);
+        OutputStream os = Files.newOutputStream(f.toPath());
+        os.write(data);
     }
 
     public void connectS3Client(String profile) {
@@ -47,8 +59,13 @@ public class AwsDataObjectHelperImpl {
         return s3.headBucket(request).sdkHttpResponse().isSuccessful();
     }
 
-    public boolean objectExists(String bucketUrl, String objectName) {
-        HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketUrl).key(objectName).build();
-        return s3.headObject(request).sdkHttpResponse().isSuccessful();
+    public boolean objectExists(String objectName) {
+        HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketPath).key(objectName).build();
+        try {
+            s3.headObject(request);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
