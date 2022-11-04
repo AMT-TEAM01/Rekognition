@@ -1,4 +1,4 @@
-package ch.heig.vd.AWSImpl;
+package ch.heig.vd;
 
 public interface ILabelDetector {
 }
