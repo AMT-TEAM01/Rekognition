@@ -21,6 +21,7 @@ public class AwsCloudClient {
 
     public void connectHelpers() {
         objImpl.connectS3Client(profile);
+        labelImpl.connectReckognitionClient(profile);
     }
 
     public static AwsCloudClient getInstance() {
