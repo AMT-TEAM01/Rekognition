@@ -1,15 +1,26 @@
 package ch.heig.vd.AWSImpl;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-
 public class AwsCloudClient {
 
     private static AwsCloudClient instance;
+    private AwsDataObjectHelperImpl objImpl;
+    private AwsLabelDetectorHelperImpl labelImpl;
 
-    public String profile;
+
+    private String bucketPath = "amt.team01.diduno.education";
+    public String profile = "default";
 
     private AwsCloudClient(){
-        profile = "default";
+        objImpl = new AwsDataObjectHelperImpl(bucketPath);
+        labelImpl = new AwsLabelDetectorHelperImpl();
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void connectHelpers() {
+        objImpl.connectS3Client(profile);
     }
 
     public static AwsCloudClient getInstance() {
