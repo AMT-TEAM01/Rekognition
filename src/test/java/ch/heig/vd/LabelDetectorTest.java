@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LabelDetectorTest {
     AwsCloudClient client;
+    // TODO (pas pénalisé) ça devrait être une variable d'environnement pour que je
+    // puisse l'adapter au bucket que j'ai personnellement à disposition.
+    // Actuellement ça m'enpêche de run les tests et donc de compiler
     private String bucketPath = "amt.team01.diduno.education";
     private String imageTestPath;
     private String imageName = "street.jpg";
@@ -41,32 +44,34 @@ public class LabelDetectorTest {
         }
     }
 
+    // TODO (pas pénalisé) seulement 2 tests c'est un poil léger
+
     @Test
     public void testExecuteWithBase64_Success() throws IOException {
-        //given
+        // given
         byte[] bytes = Files.readAllBytes(Path.of(imageTestPath + imageName));
         String base64 = Base64.getEncoder().encodeToString(bytes);
         String response;
 
-        //when
-        response = client.execute(base64, new int[]{200, 90});
+        // when
+        response = client.execute(base64, new int[] { 200, 90 });
 
-        //then
+        // then
         assertNotNull(response);
     }
 
     @Test
     public void testExecuteWithURL_Success() throws IOException {
-        //given
+        // given
         assertFalse(client.objectExists(imageName));
         client.uploadObject(imageName, imageTestPath + imageName);
         URL url = client.generateURL(imageName, 1);
         String response;
 
-        //when
-        response = client.execute(url, new int[]{200, 90});
+        // when
+        response = client.execute(url, new int[] { 200, 90 });
 
-        //then
+        // then
         assertNotNull(response);
     }
 }

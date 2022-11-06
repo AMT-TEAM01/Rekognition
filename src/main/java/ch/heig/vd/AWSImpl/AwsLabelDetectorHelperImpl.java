@@ -16,8 +16,12 @@ import java.util.List;
 
 public class AwsLabelDetectorHelperImpl implements ILabelDetector {
     RekognitionClient client;
-    public AwsLabelDetectorHelperImpl() {}
 
+    public AwsLabelDetectorHelperImpl() {
+    }
+
+    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
+    // params
     @Override
     public String execute(URL imageUri, int[] params) throws IOException {
         SdkBytes sourcesBytes = SdkBytes.fromInputStream(imageUri.openStream());
@@ -25,6 +29,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
         return callReckognition(sourcesBytes, params);
     }
 
+    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
+    // params
     private String callReckognition(SdkBytes sources, int[] params) throws IOException {
         Image img = Image.builder()
                 .bytes(sources)
@@ -42,7 +48,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
         for (Label label : response.labels()) {
             List<AwsInstance> instances = new ArrayList<>();
             for (Instance ins : label.instances()) {
-                instances.add(new AwsInstance(ins.confidence(), new AwsBoundingBox(ins.boundingBox().width(), ins.boundingBox().height(), ins.boundingBox().left(), ins.boundingBox().top())));
+                instances.add(new AwsInstance(ins.confidence(), new AwsBoundingBox(ins.boundingBox().width(),
+                        ins.boundingBox().height(), ins.boundingBox().left(), ins.boundingBox().top())));
             }
 
             List<AwsParent> parents = new ArrayList<>();
