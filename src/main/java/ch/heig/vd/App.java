@@ -1,13 +1,16 @@
 package ch.heig.vd;
 
-/**
- * Hello world!
- *
- */
+import ch.heig.vd.AWSImpl.AwsCloudClient;
+
 public class App 
 {
+
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        AwsCloudClient client = AwsCloudClient.getInstance();
+        if (args.length == 1) {
+            client.setProfile(args[0]);
+        }
+        client.connectHelpers();
     }
 }
