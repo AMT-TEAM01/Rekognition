@@ -16,6 +16,7 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DataObjectTest {
+    //TODO Review private variable...
     AwsCloudClient client;
     private String bucketPath = "amt.team01.diduno.education";
     private String testImage;
@@ -26,6 +27,7 @@ public class DataObjectTest {
     private String relativePathImages = "/src/test/java/ch/heig/vd/images/";
     private String relativePathDownload = "/src/test/java/ch/heig/vd/download/";
 
+    //TODO Review Rewrite Test signature "Method_Scenario_ResultExpected"
     @BeforeEach
     public void init() {
         client = AwsCloudClient.getInstance();
@@ -39,6 +41,7 @@ public class DataObjectTest {
     }
 
     @AfterEach
+    //TODO REVIEW Remove all Bucket mentions. Everything is a DataObject.
     public void cleanup() {
         if (client.bucketExists(bucketPath)) {
             client.deleteObject(testImage);
@@ -53,82 +56,83 @@ public class DataObjectTest {
         }
     }
 
+
     @Test
     public void testCheckObjectNotExit_Success() {
-        //given
+        // given
         String notExistFile = "fileNotExist.jpg";
         Boolean actualResult;
 
-        //when
+        // when
         actualResult = client.objectExists(notExistFile);
 
-        //then
+        // then
         assertFalse(actualResult);
     }
 
     @Test
     public void testGenerateURL_Success() {
-        //given
+        // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
         URL url;
 
-        //when
+        // when
         url = client.generateURL(testImage, 1);
 
-        //then
+        // then
         assertNotNull(url);
     }
 
     @Test
     public void testDeleteObject_Success() {
-        //given
+        // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
 
-        //when
+        // when
         client.deleteObject(testImage);
 
-        //then
+        // then
         assertFalse(client.objectExists(testImage));
     }
 
     @Test
     public void testBaseBucketExist_Success() {
-        //given
+        // given
         Boolean actualResult;
 
-        //when
+        // when
         actualResult = client.bucketExists(bucketPath);
 
-        //then
+        // then
         assertTrue(actualResult);
     }
 
     @Test
     public void testUploadFile_Success() {
-        //given
+        // given
         assertFalse(client.objectExists(testImage));
         Boolean actualResult;
 
-        //when
+        // when
         client.uploadObject(testImage, imageTestPath);
 
-        //then
+        // then
         actualResult = client.objectExists(testImage);
         assertTrue(actualResult);
     }
 
     @Test
     public void testUploadObjectWithData_Success() throws IOException {
-        //given
+        // given
         assertFalse(client.objectExists(testText));
         Boolean actualResult;
 
-        //when
+        // when
         client.uploadObjectWithData(testText, "test1");
 
-        //then
+        // then
         actualResult = client.objectExists(testText);
         assertTrue(actualResult);
         assertDoesNotThrow(() -> {
@@ -142,16 +146,16 @@ public class DataObjectTest {
 
     @Test
     public void testDownloadFile_Success() {
-        //given
+        // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
 
-        //when
+        // when
         assertDoesNotThrow(() -> {
             client.downloadObject(testImage, downLoadPath);
         });
 
-        //then
+        // then
         assertTrue(new File(downLoadPath + testImage).exists());
     }
 }
