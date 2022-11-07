@@ -1,5 +1,8 @@
 package ch.heig.vd.AWSImpl;
 
+import java.io.IOException;
+import java.net.URL;
+
 public class AwsCloudClient {
 
     private static AwsCloudClient instance;
@@ -21,6 +24,7 @@ public class AwsCloudClient {
 
     public void connectHelpers() {
         objImpl.connectS3Client(profile);
+        labelImpl.connectReckognitionClient(profile);
     }
 
     public static AwsCloudClient getInstance() {
@@ -28,5 +32,40 @@ public class AwsCloudClient {
             instance = new AwsCloudClient();
         }
         return instance;
+    }
+
+    public void uploadObjectWithData(String objectName, String data) {
+        objImpl.uploadObjectWithData(objectName, data);
+    }
+    public String execute(byte[] base64, int[] params) throws IOException {
+        return labelImpl.execute(base64, params);
+    }
+
+    public String execute(URL imageUri, int[] params) throws IOException {
+        return labelImpl.execute(imageUri, params);
+    }
+
+    public boolean objectExists(String objectName) {
+        return objImpl.objectExists(objectName);
+    }
+
+    public void deleteObject(String objectName) {
+        objImpl.deleteObject(objectName);
+    }
+
+    public boolean bucketExists(String bucketUrl) {
+        return objImpl.bucketExists(bucketUrl);
+    }
+
+    public void uploadObject(String objectName, String from) {
+        objImpl.uploadObject(objectName, from);
+    }
+
+    public URL generateURL(String objectName, int expireTimeMinute) {
+        return objImpl.generateURL(objectName, expireTimeMinute);
+    }
+
+    public void downloadObject(String objectName, String path) throws IOException {
+        objImpl.downloadObject(objectName, path);
     }
 }

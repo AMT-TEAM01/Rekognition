@@ -1,4 +1,80 @@
 package ch.heig.vd.AWSImpl;
 
-public class AwsLabelDetectorHelperImpl {
+import ch.heig.vd.AWSImpl.JSON.*;
+import ch.heig.vd.ILabelDetector;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.http.SdkHttpResponse;
+import software.amazon.awssdk.services.rekognition.RekognitionClient;
+import software.amazon.awssdk.services.rekognition.model.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AwsLabelDetectorHelperImpl implements ILabelDetector {
+    RekognitionClient client;
+
+    public AwsLabelDetectorHelperImpl() {}
+
+    @Override
+    public String execute(URL imageUri, int[] params) throws IOException {
+        SdkBytes sourcesBytes = SdkBytes.fromInputStream(imageUri.openStream());
+
+        String response = callReckognition(sourcesBytes, params);
+        AwsCloudClient.getInstance().uploadObjectWithData(Paths.get(imageUri.getPath()).getFileName().toString().split("\\.")[0] + ".json", response);
+        return response;
+    }
+
+    private String callReckognition(SdkBytes sources, int[] params) throws IOException {
+        Image img = Image.builder()
+                .bytes(sources)
+                .build();
+
+        DetectLabelsRequest request = DetectLabelsRequest.builder()
+                .image(img)
+                .maxLabels(params[0])
+                .minConfidence((float) params[1])
+                .build();
+
+        DetectLabelsResponse response = client.detectLabels(request);
+
+        List<AwsLabel> labels = new ArrayList<>();
+        for (Label label : response.labels()) {
+            List<AwsInstance> instances = new ArrayList<>();
+            for (Instance ins : label.instances()) {
+                instances.add(new AwsInstance(ins.confidence(), new AwsBoundingBox(ins.boundingBox().width(), ins.boundingBox().height(), ins.boundingBox().left(), ins.boundingBox().top())));
+            }
+
+            List<AwsParent> parents = new ArrayList<>();
+            for (Parent parent : label.parents()) {
+                parents.add(new AwsParent(parent.name()));
+            }
+
+            labels.add(new AwsLabel(label.name(), label.confidence(), instances, parents));
+        }
+        AwsLabels lab = new AwsLabels(labels);
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.writeValueAsString(lab);
+    }
+
+    @Override
+    public String execute(byte[] base64, int[] params) throws IOException {
+        String response = callReckognition(SdkBytes.fromByteArray(base64), params);
+        AwsCloudClient.getInstance().uploadObjectWithData("response.json", response);
+        return response;
+    }
+
+    public void connectReckognitionClient(String profile) {
+        client = RekognitionClient.builder()
+                .credentialsProvider(ProfileCredentialsProvider.create(profile))
+                .build();
+    }
 }
