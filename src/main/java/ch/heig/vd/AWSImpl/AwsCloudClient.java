@@ -5,15 +5,15 @@ import ch.heig.vd.ICloudClient;
 import java.io.IOException;
 import java.net.URL;
 
-
 public class AwsCloudClient implements ICloudClient {
     private static AwsCloudClient instance;
     private AwsDataObjectHelperImpl objImpl;
     private AwsLabelDetectorHelperImpl labelImpl;
+    //TODO REVIEW bucketPath must be set during instantiation (App responsibility)
     private String bucketPath = "amt.team01.diduno.education";
     public String profile = "default";
 
-    private AwsCloudClient(){
+    private AwsCloudClient() {
         objImpl = new AwsDataObjectHelperImpl(bucketPath);
         labelImpl = new AwsLabelDetectorHelperImpl();
     }
@@ -38,10 +38,14 @@ public class AwsCloudClient implements ICloudClient {
         objImpl.uploadObjectWithData(objectName, data);
     }
 
+    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
+    // params
     public String execute(String base64, int[] params) throws IOException {
         return labelImpl.execute(base64, params);
     }
 
+    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
+    // params
     public String execute(URL imageUri, int[] params) throws IOException {
         return labelImpl.execute(imageUri, params);
     }
