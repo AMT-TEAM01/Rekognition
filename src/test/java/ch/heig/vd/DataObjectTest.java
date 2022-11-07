@@ -18,8 +18,8 @@ public class DataObjectTest {
     private String imagesFolderPath;
     private String imageTestPath;
     private String downLoadPath;
-    private String relativePathImages = "\\src\\test\\java\\ch\\heig\\vd\\images\\";
-    private String relativePathDownload = "\\src\\test\\java\\ch\\heig\\vd\\download\\";
+    private String relativePathImages = "/src/test/java/ch/heig/vd/images/";
+    private String relativePathDownload = "/src/test/java/ch/heig/vd/download/";
 
     @BeforeEach
     public void init() {

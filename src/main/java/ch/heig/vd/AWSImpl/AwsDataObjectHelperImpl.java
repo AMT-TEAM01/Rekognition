@@ -32,6 +32,15 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
         s3.putObject(objectRequest, RequestBody.fromFile(new File(from)));
     }
 
+    public void uploadObjectWithData(String objectName, String data) {
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketPath)
+                .key(objectName)
+                .build();
+
+        s3.putObject(objectRequest, RequestBody.fromString(data));
+    }
+
     public void deleteObject(String objectName) {
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
                 .bucket(bucketPath)
