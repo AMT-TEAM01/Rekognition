@@ -64,4 +64,8 @@ public class AwsCloudClient {
     public URL generateURL(String objectName, int expireTimeMinute) {
         return objImpl.generateURL(objectName, expireTimeMinute);
     }
+
+    public void downloadObject(String objectName, String path) throws IOException {
+        objImpl.downloadObject(objectName, path);
+    }
 }
