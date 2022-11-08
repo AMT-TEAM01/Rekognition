@@ -5,6 +5,7 @@ import ch.heig.vd.ICloudClient;
 import java.io.IOException;
 import java.net.URL;
 
+
 public class AwsCloudClient implements ICloudClient {
 
     private static AwsCloudClient instance;
@@ -40,7 +41,7 @@ public class AwsCloudClient implements ICloudClient {
         objImpl.uploadObjectWithData(objectName, data);
     }
 
-    public String execute(byte[] base64, int[] params) throws IOException {
+    public String execute(String base64, int[] params) throws IOException {
         return labelImpl.execute(base64, params);
     }
 

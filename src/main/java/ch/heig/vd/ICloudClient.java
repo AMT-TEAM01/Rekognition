@@ -11,6 +11,6 @@ public interface ICloudClient {
     void deleteObject(String objectName);
     boolean objectExists(String objectName);
     String execute(URL imageUri, int[] params) throws IOException;
-    String execute(byte[] base64, int[] params) throws IOException;
+    String execute(String base64, int[] params) throws IOException;
     void uploadObjectWithData(String objectName, String data);
 }
