@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class App 
 {
 
-    private static String imageName = "street.jpg";
-    private static String relativePathImages = "/src/main/java/ch/heig/vd/images/";
+    private static String imagePath = "/street.jpg";
 
     public static void main( String[] args ) throws IOException {
         AwsCloudClient client = AwsCloudClient.getInstance();
@@ -21,8 +21,7 @@ public class App
         }
         client.connectHelpers();
 
-        String path = new File("").getAbsolutePath() + relativePathImages;
-        byte[] bytes = Files.readAllBytes(Path.of(path + imageName));
+        byte[] bytes = App.class.getResourceAsStream(imagePath).readAllBytes();
         String base64 = Base64.getEncoder().encodeToString(bytes);
 
         String result = client.execute(base64, new int[]{200, 90});
