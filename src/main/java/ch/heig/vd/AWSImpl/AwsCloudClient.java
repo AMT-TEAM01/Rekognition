@@ -7,12 +7,9 @@ import java.net.URL;
 
 
 public class AwsCloudClient implements ICloudClient {
-
     private static AwsCloudClient instance;
     private AwsDataObjectHelperImpl objImpl;
     private AwsLabelDetectorHelperImpl labelImpl;
-
-
     private String bucketPath = "amt.team01.diduno.education";
     public String profile = "default";
 

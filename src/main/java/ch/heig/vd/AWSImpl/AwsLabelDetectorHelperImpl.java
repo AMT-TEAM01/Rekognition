@@ -2,26 +2,20 @@ package ch.heig.vd.AWSImpl;
 
 import ch.heig.vd.AWSImpl.JSON.*;
 import ch.heig.vd.ILabelDetector;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
-import software.amazon.awssdk.http.SdkHttpResponse;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.rekognition.model.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 public class AwsLabelDetectorHelperImpl implements ILabelDetector {
     RekognitionClient client;
-
     public AwsLabelDetectorHelperImpl() {}
 
     @Override
