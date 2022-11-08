@@ -18,7 +18,11 @@ Execute the following command, where the pom.xml is located
 
 Maven will then proceed to download all the dependencies listed in the pom.xml file. 
 
-## Compiling and running
+## Settings
+
+The profile used is the default profile. Please configure your default profile with the credentials for it to work.
+
+## Compiling and running, local
 
 To compile the project and generate an executable file, run `mvn package` 
 
@@ -33,6 +37,11 @@ Execute the `run_win.bat` script, at the root of the project (where pom.xml is l
 1. Give execution right to the script with `chmod +x run_linux.sh`, at the root of the project (where pom.xml is located)
 2. Execute the script with `./run_linux` 
 
-## Settings
+## Running the deployed version
 
-TODO
+Simply run the run.sh file with `./run.sh` in the `Rekognition` folder on the deployed machine. 
+
+## Testing
+
+Tests are implemented using jUnit 5. To run all the tests, you can simple run `mvn test`.
+To run a specific test without triggering all the other ones, run `mvn test -Dtest="[TestClassName]#[FunctionName]"`
