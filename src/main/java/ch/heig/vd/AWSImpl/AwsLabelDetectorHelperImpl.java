@@ -16,6 +16,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class AwsLabelDetectorHelperImpl implements ILabelDetector {
@@ -27,9 +28,7 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
     public String execute(URL imageUri, int[] params) throws IOException {
         SdkBytes sourcesBytes = SdkBytes.fromInputStream(imageUri.openStream());
 
-        String response = callReckognition(sourcesBytes, params);
-        AwsCloudClient.getInstance().uploadObjectWithData(Paths.get(imageUri.getPath()).getFileName().toString().split("\\.")[0] + ".json", response);
-        return response;
+        return callReckognition(sourcesBytes, params);
     }
 
     private String callReckognition(SdkBytes sources, int[] params) throws IOException {
@@ -66,10 +65,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
     }
 
     @Override
-    public String execute(byte[] base64, int[] params) throws IOException {
-        String response = callReckognition(SdkBytes.fromByteArray(base64), params);
-        AwsCloudClient.getInstance().uploadObjectWithData("response.json", response);
-        return response;
+    public String execute(String base64, int[] params) throws IOException {
+        return callReckognition(SdkBytes.fromByteArray(Base64.getDecoder().decode(base64)), params);
     }
 
     public void connectReckognitionClient(String profile) {
