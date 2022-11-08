@@ -8,4 +8,5 @@ public interface IDataObjectHelper {
     void deleteObject(String objectName);
     void downloadObject(String objectName, String path) throws IOException;
     URL generateURL(String objectName, int expireTimeMinute);
+    void uploadObjectWithData(String objectName, String data);
 }

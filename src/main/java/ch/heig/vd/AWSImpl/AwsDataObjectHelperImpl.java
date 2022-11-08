@@ -14,7 +14,6 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.time.Instant;
 
 public class AwsDataObjectHelperImpl implements IDataObjectHelper {
     private S3Client s3;
@@ -30,6 +29,15 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
                 .build();
 
         s3.putObject(objectRequest, RequestBody.fromFile(new File(from)));
+    }
+
+    public void uploadObjectWithData(String objectName, String data) {
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketPath)
+                .key(objectName)
+                .build();
+
+        s3.putObject(objectRequest, RequestBody.fromString(data));
     }
 
     public void deleteObject(String objectName) {

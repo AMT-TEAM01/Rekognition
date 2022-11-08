@@ -1,5 +1,6 @@
 package ch.heig.vd;
 
+import ch.heig.vd.AWSImpl.AwsCloudClient;
 import ch.heig.vd.AWSImpl.AwsDataObjectHelperImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,25 +9,30 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DataObjectTest {
-    AwsDataObjectHelperImpl objImpl;
+    AwsCloudClient client;
     private String bucketPath = "amt.team01.diduno.education";
     private String testImage;
+    private String testText;
     private String imagesFolderPath;
     private String imageTestPath;
     private String downLoadPath;
-    private String relativePathImages = "\\src\\test\\java\\ch\\heig\\vd\\images\\";
-    private String relativePathDownload = "\\src\\test\\java\\ch\\heig\\vd\\download\\";
+    private String relativePathImages = "/src/test/java/ch/heig/vd/images/";
+    private String relativePathDownload = "/src/test/java/ch/heig/vd/download/";
 
     @BeforeEach
     public void init() {
-        objImpl = new AwsDataObjectHelperImpl(bucketPath);
-        objImpl.connectS3Client("default");
+        client = AwsCloudClient.getInstance();
+        client.connectHelpers();
 
         testImage = "aws.png";
+        testText = "test.txt";
         imagesFolderPath = new File("").getAbsolutePath() + relativePathImages;
         imageTestPath = imagesFolderPath + testImage;
         downLoadPath = new File("").getAbsolutePath() + relativePathDownload;
@@ -34,8 +40,9 @@ public class DataObjectTest {
 
     @AfterEach
     public void cleanup() {
-        if (objImpl.bucketExists(bucketPath)) {
-            objImpl.deleteObject(testImage);
+        if (client.bucketExists(bucketPath)) {
+            client.deleteObject(testImage);
+            client.deleteObject(testText);
         }
 
         File[] files = new File(downLoadPath).listFiles();
@@ -53,7 +60,7 @@ public class DataObjectTest {
         Boolean actualResult;
 
         //when
-        actualResult = objImpl.objectExists(notExistFile);
+        actualResult = client.objectExists(notExistFile);
 
         //then
         assertFalse(actualResult);
@@ -62,27 +69,28 @@ public class DataObjectTest {
     @Test
     public void testGenerateURL_Success() {
         //given
-        assertFalse(objImpl.objectExists(testImage));
-        objImpl.uploadObject(testImage, imageTestPath);
+        assertFalse(client.objectExists(testImage));
+        client.uploadObject(testImage, imageTestPath);
         URL url;
 
         //when
-        url = objImpl.generateURL(testImage, 1);
+        url = client.generateURL(testImage, 1);
 
+        //then
         assertNotNull(url);
     }
 
     @Test
     public void testDeleteObject_Success() {
         //given
-        assertFalse(objImpl.objectExists(testImage));
-        objImpl.uploadObject(testImage, imageTestPath);
+        assertFalse(client.objectExists(testImage));
+        client.uploadObject(testImage, imageTestPath);
 
         //when
-        objImpl.deleteObject(testImage);
+        client.deleteObject(testImage);
 
         //then
-        assertFalse(objImpl.objectExists(testImage));
+        assertFalse(client.objectExists(testImage));
     }
 
     @Test
@@ -91,7 +99,7 @@ public class DataObjectTest {
         Boolean actualResult;
 
         //when
-        actualResult = objImpl.bucketExists(bucketPath);
+        actualResult = client.bucketExists(bucketPath);
 
         //then
         assertTrue(actualResult);
@@ -100,26 +108,47 @@ public class DataObjectTest {
     @Test
     public void testUploadFile_Success() {
         //given
-        assertFalse(objImpl.objectExists(testImage));
-        objImpl.uploadObject(testImage, imageTestPath);
+        assertFalse(client.objectExists(testImage));
         Boolean actualResult;
 
         //when
-        actualResult = objImpl.objectExists(testImage);
+        client.uploadObject(testImage, imageTestPath);
 
         //then
+        actualResult = client.objectExists(testImage);
         assertTrue(actualResult);
+    }
+
+    @Test
+    public void testUploadObjectWithData_Success() throws IOException {
+        //given
+        assertFalse(client.objectExists(testText));
+        Boolean actualResult;
+
+        //when
+        client.uploadObjectWithData(testText, "test1");
+
+        //then
+        actualResult = client.objectExists(testText);
+        assertTrue(actualResult);
+        assertDoesNotThrow(() -> {
+            client.downloadObject(testText, downLoadPath);
+        });
+        File f = new File(downLoadPath + testText);
+        assertTrue(f.exists());
+        Scanner reader = new Scanner(f);
+        assertEquals("test1", reader.nextLine());
     }
 
     @Test
     public void testDownloadFile_Success() {
         //given
-        assertFalse(objImpl.objectExists(testImage));
-        objImpl.uploadObject(testImage, imageTestPath);
+        assertFalse(client.objectExists(testImage));
+        client.uploadObject(testImage, imageTestPath);
 
         //when
         assertDoesNotThrow(() -> {
-            objImpl.downloadObject(testImage, downLoadPath);
+            client.downloadObject(testImage, downLoadPath);
         });
 
         //then
