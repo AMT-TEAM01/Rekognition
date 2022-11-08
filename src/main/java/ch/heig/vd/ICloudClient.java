@@ -7,6 +7,7 @@ public interface ICloudClient {
     void downloadObject(String objectName, String path) throws IOException;
     URL generateURL(String objectName, int expireTimeMinute);
     void uploadObject(String objectName, String from);
+    //TODO REVIEW Bucket Exists must be solved in objectExists
     boolean bucketExists(String bucketUrl);
     void deleteObject(String objectName);
     boolean objectExists(String objectName);
