@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +19,7 @@ public class DataObjectTest {
     AwsCloudClient client;
     private String bucketPath = "amt.team01.diduno.education";
     private String testImage;
+    private String testText;
     private String imagesFolderPath;
     private String imageTestPath;
     private String downLoadPath;
@@ -28,6 +32,7 @@ public class DataObjectTest {
         client.connectHelpers();
 
         testImage = "aws.png";
+        testText = "test.txt";
         imagesFolderPath = new File("").getAbsolutePath() + relativePathImages;
         imageTestPath = imagesFolderPath + testImage;
         downLoadPath = new File("").getAbsolutePath() + relativePathDownload;
@@ -37,6 +42,7 @@ public class DataObjectTest {
     public void cleanup() {
         if (client.bucketExists(bucketPath)) {
             client.deleteObject(testImage);
+            client.deleteObject(testText);
         }
 
         File[] files = new File(downLoadPath).listFiles();
@@ -107,10 +113,31 @@ public class DataObjectTest {
 
         //when
         client.uploadObject(testImage, imageTestPath);
-        actualResult = client.objectExists(testImage);
 
         //then
+        actualResult = client.objectExists(testImage);
         assertTrue(actualResult);
+    }
+
+    @Test
+    public void testUploadObjectWithData_Success() throws IOException {
+        //given
+        assertFalse(client.objectExists(testText));
+        Boolean actualResult;
+
+        //when
+        client.uploadObjectWithData(testText, "test1");
+
+        //then
+        actualResult = client.objectExists(testText);
+        assertTrue(actualResult);
+        assertDoesNotThrow(() -> {
+            client.downloadObject(testText, downLoadPath);
+        });
+        File f = new File(downLoadPath + testText);
+        assertTrue(f.exists());
+        Scanner reader = new Scanner(f);
+        assertEquals("test1", reader.nextLine());
     }
 
     @Test
