@@ -1,6 +1,6 @@
 package ch.heig.vd;
 
-import ch.heig.vd.AWSImpl.AwsCloudClient;
+import ch.heig.vd.impAWS.AwsCloudClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

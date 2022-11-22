@@ -1,4 +1,4 @@
-package ch.heig.vd.AWSImpl;
+package ch.heig.vd.impAWS;
 
 import ch.heig.vd.IDataObjectHelper;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
@@ -95,7 +95,8 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
         try {
             s3.headObject(request);
             return true;
-        } catch (Exception e) {
+        } catch (NoSuchKeyException e) {
+            System.out.println(e);
             return false;
         }
     }

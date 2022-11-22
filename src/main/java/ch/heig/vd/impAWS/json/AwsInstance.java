@@ -1,6 +1,4 @@
-package ch.heig.vd.AWSImpl.JSON;
-
-import java.util.List;
+package ch.heig.vd.impAWS.json;
 
 public class AwsInstance {
     public float confidence;

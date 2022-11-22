@@ -1,6 +1,6 @@
 package ch.heig.vd;
 
-import ch.heig.vd.AWSImpl.AwsCloudClient;
+import ch.heig.vd.impAWS.AwsCloudClient;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -14,6 +14,9 @@ public class App
         AwsCloudClient client = AwsCloudClient.getInstance();
         if (args.length == 1) {
             client.setProfile(args[0]);
+        } else if (args.length == 2) {
+            client.setProfile(args[0]);
+
         }
         client.connectHelpers();
 

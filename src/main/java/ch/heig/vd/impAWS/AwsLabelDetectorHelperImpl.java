@@ -1,6 +1,6 @@
-package ch.heig.vd.AWSImpl;
+package ch.heig.vd.impAWS;
 
-import ch.heig.vd.AWSImpl.JSON.*;
+import ch.heig.vd.impAWS.json.*;
 import ch.heig.vd.ILabelDetector;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
@@ -20,8 +20,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
     public AwsLabelDetectorHelperImpl() {
     }
 
-    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
-    // params
+    // params contient 2 paramètres : Le premier paramètre est le nombre d'étiquettes max,
+    // le deuxième est la precision minimum (0-100)
     @Override
     public String execute(URL imageUri, int[] params) throws IOException {
         SdkBytes sourcesBytes = SdkBytes.fromInputStream(imageUri.openStream());
@@ -29,8 +29,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
         return callReckognition(sourcesBytes, params);
     }
 
-    // TODO ajouter des explications, on comprends pas ce qu'il faut mettre dans
-    // params
+    // params contient 2 paramètres : Le premier paramètre est le nombre d'étiquettes max,
+    // le deuxième est la precision minimum (0-100)
     private String callReckognition(SdkBytes sources, int[] params) throws IOException {
         Image img = Image.builder()
                 .bytes(sources)
@@ -65,6 +65,8 @@ public class AwsLabelDetectorHelperImpl implements ILabelDetector {
         return mapper.writeValueAsString(lab);
     }
 
+    // params contient 2 paramètres : Le premier paramètre est le nombre d'étiquettes max,
+    // le deuxième est la precision minimum (0-100)
     @Override
     public String execute(String base64, int[] params) throws IOException {
         return callReckognition(SdkBytes.fromByteArray(Base64.getDecoder().decode(base64)), params);

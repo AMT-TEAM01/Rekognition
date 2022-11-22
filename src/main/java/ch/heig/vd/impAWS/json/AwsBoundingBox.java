@@ -1,4 +1,4 @@
-package ch.heig.vd.AWSImpl.JSON;
+package ch.heig.vd.impAWS.json;
 
 public class AwsBoundingBox {
     public float width;

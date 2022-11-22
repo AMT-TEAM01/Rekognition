@@ -1,4 +1,4 @@
-package ch.heig.vd.AWSImpl;
+package ch.heig.vd.impAWS;
 
 import ch.heig.vd.ICloudClient;
 
