@@ -10,6 +10,7 @@ public class AwsCloudClient implements ICloudClient {
     private static AwsCloudClient instance;
     private AwsDataObjectHelperImpl objImpl;
     private AwsLabelDetectorHelperImpl labelImpl;
+    //TODO REVIEW bucketPath must be set during instantiation (App responsibility)
     private String bucketPath = "amt.team01.diduno.education";
     public String profile = "default";
 

@@ -32,6 +32,7 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
     }
 
     public void uploadObjectWithData(String objectName, String data) {
+        //TODO REVIEW same content as uploadObject !
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketPath)
                 .key(objectName)
@@ -96,6 +97,7 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
             s3.headObject(request);
             return true;
         } catch (Exception e) {
+            //TODO REVIEW Never catch the whole world ! Be more specific.
             return false;
         }
     }

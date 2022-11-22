@@ -9,4 +9,6 @@ public interface IDataObjectHelper {
     void downloadObject(String objectName, String path) throws IOException;
     URL generateURL(String objectName, int expireTimeMinute);
     void uploadObjectWithData(String objectName, String data);
+
+    //TODO REVIEW Overload uploadObject only one method to uploadAnObject
 }
