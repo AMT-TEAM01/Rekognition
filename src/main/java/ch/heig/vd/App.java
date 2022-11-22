@@ -2,6 +2,7 @@ package ch.heig.vd;
 
 import ch.heig.vd.AWSImpl.AwsCloudClient;
 
+//TODO REVIEW Remove unused import statement
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class App 
 {
-
+    //TODO Review should not be hard-coded
     private static String imagePath = "/street.jpg";
 
     public static void main( String[] args ) throws IOException {
