@@ -2,13 +2,8 @@ package ch.heig.vd;
 
 import ch.heig.vd.AWSImpl.AwsCloudClient;
 
-//TODO REVIEW Remove unused import statement
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class App
 {

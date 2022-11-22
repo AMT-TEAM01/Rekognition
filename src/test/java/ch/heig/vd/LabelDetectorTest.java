@@ -1,9 +1,6 @@
 package ch.heig.vd;
 
 import ch.heig.vd.AWSImpl.AwsCloudClient;
-import ch.heig.vd.AWSImpl.AwsDataObjectHelperImpl;
-import ch.heig.vd.AWSImpl.AwsLabelDetectorHelperImpl;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
