@@ -16,7 +16,8 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DataObjectTest {
-    AwsCloudClient client;∂
+    //TODO Review private variable...
+    AwsCloudClient client;
     private String bucketPath = "amt.team01.diduno.education";
     private String testImage;
     private String testText;
@@ -26,6 +27,7 @@ public class DataObjectTest {
     private String relativePathImages = "/src/test/java/ch/heig/vd/images/";
     private String relativePathDownload = "/src/test/java/ch/heig/vd/download/";
 
+    //TODO Review Rewrite Test signature "Method_Scenario_ResultExpected"
     @BeforeEach
     public void init() {
         client = AwsCloudClient.getInstance();
@@ -39,6 +41,7 @@ public class DataObjectTest {
     }
 
     @AfterEach
+    //TODO REVIEW Remove all Bucket mentions. Everything is a DataObject.
     public void cleanup() {
         if (client.bucketExists(bucketPath)) {
             client.deleteObject(testImage);
@@ -52,6 +55,7 @@ public class DataObjectTest {
             }
         }
     }
+
 
     @Test
     public void testCheckObjectNotExit_Success() {
