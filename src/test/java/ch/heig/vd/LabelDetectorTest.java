@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LabelDetectorTest {
-    AwsCloudClient client;
+    private AwsCloudClient client;
     // TODO (pas pénalisé) ça devrait être une variable d'environnement pour que je
     // puisse l'adapter au bucket que j'ai personnellement à disposition.
     // Actuellement ça m'enpêche de run les tests et donc de compiler
