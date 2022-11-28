@@ -16,8 +16,8 @@ public class App
             client.setProfile(args[0]);
         } else if (args.length == 2) {
             client.setProfile(args[0]);
-
         }
+        client.setBucketPath("amt.team01.diduno.education");
         client.connectHelpers();
 
         byte[] bytes = App.class.getResourceAsStream(imagePath).readAllBytes();
@@ -25,7 +25,7 @@ public class App
 
         String result = client.execute(base64, new int[]{200, 90});
 
-        client.uploadObjectWithData("result.json", result);
+        client.uploadObject("result.json", result);
 
         System.out.println(result);
     }

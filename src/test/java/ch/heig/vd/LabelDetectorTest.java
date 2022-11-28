@@ -28,6 +28,7 @@ public class LabelDetectorTest {
     @BeforeEach
     public void init() {
         client = AwsCloudClient.getInstance();
+        client.setBucketPath("amt.team01.diduno.education");
         client.connectHelpers();
 
         imageTestPath = new File("").getAbsolutePath() + relativePathImages;
@@ -35,7 +36,7 @@ public class LabelDetectorTest {
 
     @AfterEach
     public void cleanup() {
-        if (client.bucketExists(bucketPath)) {
+        if (client.objectExists(bucketPath)) {
             client.deleteObject(imageName);
         }
     }
@@ -43,7 +44,7 @@ public class LabelDetectorTest {
     // TODO (pas pénalisé) seulement 2 tests c'est un poil léger
 
     @Test
-    public void testExecuteWithBase64_Success() throws IOException {
+    public void execute_ExecuteWithBase64File_Success() throws IOException {
         // given
         byte[] bytes = Files.readAllBytes(Path.of(imageTestPath + imageName));
         String base64 = Base64.getEncoder().encodeToString(bytes);
@@ -57,10 +58,10 @@ public class LabelDetectorTest {
     }
 
     @Test
-    public void testExecuteWithURL_Success() throws IOException {
+    public void execute_ExecuteWithURI_Success() throws IOException {
         // given
         assertFalse(client.objectExists(imageName));
-        client.uploadObject(imageName, imageTestPath + imageName);
+        client.uploadObject(imageName, new File(imageTestPath + imageName));
         URL url = client.generateURL(imageName, 1);
         String response;
 

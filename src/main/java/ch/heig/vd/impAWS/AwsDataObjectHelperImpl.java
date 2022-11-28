@@ -18,20 +18,22 @@ import java.time.Duration;
 public class AwsDataObjectHelperImpl implements IDataObjectHelper {
     private S3Client s3;
     private String bucketPath;
-    public AwsDataObjectHelperImpl(String bucketPath) {
+    public AwsDataObjectHelperImpl() {}
+
+    public void setBucketPath(String bucketPath) {
         this.bucketPath = bucketPath;
     }
 
-    public void uploadObject(String objectName, String from) {
+    public void uploadObject(String objectName, File from) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketPath)
                 .key(objectName)
                 .build();
 
-        s3.putObject(objectRequest, RequestBody.fromFile(new File(from)));
+        s3.putObject(objectRequest, RequestBody.fromFile(from));
     }
 
-    public void uploadObjectWithData(String objectName, String data) {
+    public void uploadObject(String objectName, String data) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketPath)
                 .key(objectName)
@@ -85,19 +87,21 @@ public class AwsDataObjectHelperImpl implements IDataObjectHelper {
                 .build();
     }
 
-    public boolean bucketExists(String bucketUrl) {
-        HeadBucketRequest request = HeadBucketRequest.builder().bucket(bucketUrl).build();
-        return s3.headBucket(request).sdkHttpResponse().isSuccessful();
-    }
-
     public boolean objectExists(String objectName) {
-        HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketPath).key(objectName).build();
+        HeadBucketRequest req = HeadBucketRequest.builder().bucket(objectName).build();
         try {
-            s3.headObject(request);
-            return true;
-        } catch (NoSuchKeyException e) {
-            System.out.println(e);
-            return false;
+            if (s3.headBucket(req).sdkHttpResponse().isSuccessful()) {
+                return true;
+            }
+        } catch (S3Exception e) {
+            HeadObjectRequest request = HeadObjectRequest.builder().bucket(bucketPath).key(objectName).build();
+            try {
+                s3.headObject(request);
+                return true;
+            } catch (NoSuchKeyException ex) {
+                System.out.println(ex);
+            }
         }
+        return false;
     }
 }

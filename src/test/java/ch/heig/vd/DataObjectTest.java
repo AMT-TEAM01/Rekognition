@@ -13,34 +13,32 @@ import java.util.Scanner;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DataObjectTest {
-    //TODO Review private variable...
-    AwsCloudClient client;
+    private AwsCloudClient client;
     private String bucketPath = "amt.team01.diduno.education";
     private String testImage;
     private String testText;
     private String imagesFolderPath;
     private String imageTestPath;
     private String downLoadPath;
-    private String relativePathImages = "/src/test/java/ch/heig/vd/images/";
-    private String relativePathDownload = "/src/test/java/ch/heig/vd/download/";
+    private File relativePathImages = new File("/src/test/java/ch/heig/vd/images/");
+    private File relativePathDownload = new File("/src/test/java/ch/heig/vd/download/");
 
-    //TODO Review Rewrite Test signature "Method_Scenario_ResultExpected"
     @BeforeEach
     public void init() {
         client = AwsCloudClient.getInstance();
+        client.setBucketPath("amt.team01.diduno.education");
         client.connectHelpers();
 
         testImage = "aws.png";
         testText = "test.txt";
         imagesFolderPath = new File("").getAbsolutePath() + relativePathImages;
         imageTestPath = imagesFolderPath + testImage;
-        downLoadPath = new File("").getAbsolutePath() + relativePathDownload;
+        downLoadPath = new File("").getAbsolutePath() + relativePathDownload + "/";
     }
 
     @AfterEach
-    //TODO REVIEW Remove all Bucket mentions. Everything is a DataObject.
     public void cleanup() {
-        if (client.bucketExists(bucketPath)) {
+        if (client.objectExists(bucketPath)) {
             client.deleteObject(testImage);
             client.deleteObject(testText);
         }
@@ -55,7 +53,7 @@ public class DataObjectTest {
 
 
     @Test
-    public void testCheckObjectNotExit_Success() {
+    public void objectExists_TestFileNotExist_Success() {
         // given
         String notExistFile = "fileNotExist.jpg";
         Boolean actualResult;
@@ -68,7 +66,7 @@ public class DataObjectTest {
     }
 
     @Test
-    public void testGenerateURL_Success() {
+    public void generateURL_UploadObjectThenGenerateURL_Success() {
         // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
@@ -82,7 +80,7 @@ public class DataObjectTest {
     }
 
     @Test
-    public void testDeleteObject_Success() {
+    public void deleteObject_UploadObjectThenDelete_Success() {
         // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
@@ -95,19 +93,19 @@ public class DataObjectTest {
     }
 
     @Test
-    public void testBaseBucketExist_Success() {
+    public void objectExists_CheckIfBucketExist_Success() {
         // given
         Boolean actualResult;
 
         // when
-        actualResult = client.bucketExists(bucketPath);
+        actualResult = client.objectExists(bucketPath);
 
         // then
         assertTrue(actualResult);
     }
 
     @Test
-    public void testUploadFile_Success() {
+    public void uploadObject_UploadObjectFromDisk_Success() {
         // given
         assertFalse(client.objectExists(testImage));
         Boolean actualResult;
@@ -121,13 +119,13 @@ public class DataObjectTest {
     }
 
     @Test
-    public void testUploadObjectWithData_Success() throws IOException {
+    public void uploadObject_UploadObjectThenDownloadAndCompareWithDisk_Success() throws IOException {
         // given
         assertFalse(client.objectExists(testText));
         Boolean actualResult;
 
         // when
-        client.uploadObjectWithData(testText, "test1");
+        client.uploadObject(testText, "test1");
 
         // then
         actualResult = client.objectExists(testText);
@@ -142,7 +140,7 @@ public class DataObjectTest {
     }
 
     @Test
-    public void testDownloadFile_Success() {
+    public void downloadObject_UploadObjectThenDownloadObject_Success() {
         // given
         assertFalse(client.objectExists(testImage));
         client.uploadObject(testImage, imageTestPath);
