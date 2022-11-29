@@ -6,13 +6,15 @@ Collaborators : Chiffelle Janis, Tomic Mario
 
 This project uses Maven, java, and is developped using Intellij Ultimate Edition. Please, ensure that you have them installed.
 
-## Opening the project
+## Opening the project and editing the files.
 
-Simply clone the repo, and open then open the project folder containing the pom.xml in Intellij. A prompt will appear to propose you to import the Maven project. Accept it.
+We use IntelliJ Ultimate Edition. It has a built in support for maven, making it easier to iterate over changes. To use our project, simply clone the repo, and open then open the project folder containing the pom.xml in Intellij. A prompt will appear to propose you to import the Maven project. Accept it.
+
+### **Note: The steps that follow this one don't require IntelliJ. They can all be executed through the console/terminal, at the root of the repo.**
 
 ## Resolving the dependencies
 
-Execute the following command, where the pom.xml is located
+Execute the following command :
 
 `mvn dependency:resolve`
 
@@ -20,16 +22,12 @@ Maven will then proceed to download all the dependencies listed in the pom.xml f
 
 ## Settings
 
-The profile used is the default profile. Please configure your default profile with the credentials for it to work.
-> TODO c'est insuffisant comme explications, il n'y a même pas de lien et vous ne mentionnez pas de quel profile vous parlez. Ces explications sont a destination de quelqu'un d'externe au projet.
-
-> TODO (pas pénalisé) ajoutez des explications sur ce que votre programme demande comme configuration. Ici je pense que le profile AWS que j'utilise n'a pas les droits sur votre bucket. Vous devez expliquer dans votre readme au minimum ce qui est nécessaire de configrurer et si possible comment le configurer. 
-
+To use the service, you first need to install the AWS console : https://aws.amazon.com/cli/
+You can then proceed to enter the credentials for a profile. We recommend using the default profile. If it's not possible, you can specify the profile name as an argument for when you launch the profile. 
 
 ## Compiling and running, local
 
-
-To compile the project and generate an executable file, run `mvn package` 
+To compile the project and generate an executable file, run `mvn package`. If needed, you can add the flag `-DskipTests` to allow the project to be compiled without having the tests that pass. 
 
 To run the project:
 
@@ -53,10 +51,3 @@ To run a specific test without triggering all the other ones, run `mvn test -Dte
 
 ## Misc
 
-> TODO un bon conseil si vous voulez que vous assurer que votre doc permet a un quelqu'un d'externe au projet de faire tourner votre programme c'est de donner votre projet à quelqu'un d'externe et de lui demander de le run. Si il vous pose des questions c'est que votre doc est incomplète.
-
-> TODO vos conventions de nommage ne sont pas respectées : `Files and packages are names in UpperCamelCase`, vos packages ne sont pas en UpperCamelCase, vos fichiers non plus (eg: test/java/ch/heig/vd/images/aws.jpg). Ne vous mettez pas des batons dans les roues en définissant des rêgles qui sont difficiles à suivre.
-
-> TODO Votre argumentation des technologies utilisées ne me parait pas très construite et vous ne mentionnez jamais d'alternative a votre choix.
-
-> Pas pénalisé mais généralement les images et les text sont stockés dans un dossier resources dans test/java/resources/...
